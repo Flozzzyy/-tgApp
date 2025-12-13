@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ItemsContext } from "../context/ItemsContext";
 
-const Item = ({ products }) => {
+const Item = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
 
-  const item = products.find((i) => i.id === Number(id));
+  const {
+    items,
+    formatDate,
+    sellers,
+    reviews = [],
+    additionalImages = [],
+  } = useContext(ItemsContext);
+
+  const item = items.find((i) => i.id === Number(id));
 
   if (!item) {
     return (
@@ -25,72 +35,14 @@ const Item = ({ products }) => {
     );
   }
 
-  // Моковые данные продавца
-  const seller = {
-    name: "Эльшан А.",
-    avatar:
-      "https://ui-avatars.com/api/?name=Эльшан+А&background=4f46e5&color=fff&size=64",
-    rating: 4.9,
-    reviews: 127,
+  const seller = sellers[Math.floor(Math.random() * sellers.length)] || {
+    avatar: "https://via.placeholder.com/50",
+    name: "Продавец",
+    rating: 4.5,
+    reviews: 12,
     items: 42,
     joined: "2023",
   };
-
-  // Моковые отзывы
-  const reviews = [
-    {
-      id: 1,
-      user: "Александр К.",
-      rating: 5,
-      date: "15 декабря 2024",
-      text: "Отличный товар, соответствует описанию. Продавец ответственный, доставил быстро. Рекомендую!",
-      avatar:
-        "https://ui-avatars.com/api/?name=Александр+К&background=059669&color=fff&size=32",
-    },
-    {
-      id: 2,
-      user: "Мария С.",
-      rating: 4,
-      date: "10 декабря 2024",
-      text: "Хороший товар за свои деньги. Есть небольшие царапины на корпусе, но в целом всё работает исправно.",
-      avatar:
-        "https://ui-avatars.com/api/?name=Мария+С&background=dc2626&color=fff&size=32",
-    },
-  ];
-
-  // Форматирование даты
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const months = [
-      "января",
-      "февраля",
-      "марта",
-      "апреля",
-      "мая",
-      "июня",
-      "июля",
-      "августа",
-      "сентября",
-      "октября",
-      "ноября",
-      "декабря",
-    ];
-
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-
-    return `${day} ${month} в ${hours}:${minutes}`;
-  };
-
-  // Моковые дополнительные изображения
-  const additionalImages = [
-    item.image,
-    "https://via.placeholder.com/400x400/3b82f6/ffffff?text=Изображение+2",
-    "https://via.placeholder.com/400x400/10b981/ffffff?text=Изображение+3",
-    "https://via.placeholder.com/400x400/ef4444/ffffff?text=Изображение+4",
-  ];
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
@@ -167,7 +119,7 @@ const Item = ({ products }) => {
           <div className="relative">
             <div className="h-[400px] overflow-hidden">
               <img
-                src={additionalImages[selectedImage]}
+                src={item.image}
                 alt={item.title}
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -240,7 +192,7 @@ const Item = ({ products }) => {
                   {item.type || "new"}
                 </span>
                 <span className="text-zinc-500 text-sm ml-auto">
-                  {formatDate(item.createdAt)}
+                  {formatDate ? formatDate(item.createdAt) : item.createdAt}
                 </span>
               </div>
 
