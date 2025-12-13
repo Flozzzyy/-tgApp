@@ -1,31 +1,16 @@
-import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import Header from "./components/Header";
+import React, { useState, useEffect } from "react";
 import Search from "./components/Search";
 import Categories from "./components/Categories";
 import Filters from "./components/Filters";
 import BottomNav from "./components/BottomNav";
 import { useContext } from "react";
 import { ItemsContext } from "../context/ItemsContext";
-import WishButton from "./components/WishButton";
-import { useWishlist } from "../hooks/useWishlist";
+import Map from "./components/Map";
 const Home = () => {
-  const {
-    items,
-    search,
-    setSearch,
-    categoriesRef,
-    filters,
-    formatDate,
-    sellers,
-    categories,
-    activeFilter,
-    setActiveFilter,
-    activeCategory,
-    setActiveCategory,
-  } = useContext(ItemsContext);
-  const { wishlist, addToWishlist, removeFromWishlist, isInWishlist } =
-    useWishlist();
+  const [isLoading, setIsLoading] = useState(true);
+  const { items, search, sellers, activeFilter, activeCategory } =
+    useContext(ItemsContext);
+
   // Фильтрация товаров
   const visible = items
     .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
@@ -36,12 +21,20 @@ const Home = () => {
       activeCategory === "Все" ? true : item.category === activeCategory
     );
 
+  // Симуляция загрузки товаров
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [search, activeFilter, activeCategory]);
+
   return (
     <>
       {/* Верхняя панель статуса */}
       <div className="h-6 bg-zinc-900"></div>
 
-      <Header />
       <section>
         <div className="pb-20">
           <Search />
@@ -59,72 +52,34 @@ const Home = () => {
 
           {/* Сетка товаров */}
           <div className="grid grid-cols-2 gap-3 px-4 pb-4">
-            {visible.map((item, index) => {
-              const seller = sellers[index % sellers.length];
-
-              return (
-                <Link to={`/items/${item.id}`} key={item.id} className="h-full">
-                  <div className="bg-zinc-800 rounded-lg overflow-hidden flex flex-col h-full">
-                    {/* Изображение с иконкой сердца */}
-                    <div className="relative shrink-0 h-48 w-full overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.src =
-                            "https://via.placeholder.com/300x300?text=No+Image";
-                        }}
-                      />
-                      <WishButton item={item} />
-                    </div>
-
-                    <div className="p-3 flex flex-col flex-1 min-h-0">
-                      <h3 className="text-sm font-medium text-white mb-2 line-clamp-2">
-                        {item.title}
-                      </h3>
-
-                      <div className="mb-2">
-                        <span className="text-lg font-bold text-white">
-                          {item.price.toLocaleString("ru-RU")} ₽
-                        </span>
-                      </div>
-
-                      {/* Информация о продавце */}
-
-                      <div className="flex items-center gap-2 mb-1">
-                        <img
-                          src={seller.avatar}
-                          alt={seller.name}
-                          className="w-5 h-5 rounded-full"
-                        />
-                        <span className="text-xs text-zinc-300">
-                          {seller.name}
-                        </span>
-                      </div>
-
-                      {/* Рейтинг и дата */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <svg
-                            className="w-3 h-3 text-yellow-400 fill-yellow-400"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                          <span className="text-xs text-white font-medium">
-                            {seller.rating}
-                          </span>
-                        </div>
-                        <span className="text-xs text-zinc-500">
-                          {formatDate(item.createdAt)}
-                        </span>
-                      </div>
+            {isLoading
+              ? // Skeleton загрузка
+                Array.from({ length: 6 }).map((_, index) => (
+                  <div
+                    key={`skeleton-${index}`}
+                    className="bg-zinc-800 rounded-xl overflow-hidden flex flex-col h-full skeleton"
+                    style={{ minHeight: "320px" }}
+                  >
+                    <div className="relative shrink-0 h-48 w-full bg-zinc-700"></div>
+                    <div className="p-3 flex flex-col flex-1 min-h-0 space-y-2">
+                      <div className="h-4 bg-zinc-700 rounded w-3/4"></div>
+                      <div className="h-6 bg-zinc-700 rounded w-1/2"></div>
+                      <div className="h-3 bg-zinc-700 rounded w-2/3"></div>
                     </div>
                   </div>
-                </Link>
-              );
-            })}
+                ))
+              : visible.map((item, index) => {
+                  const seller = sellers[index % sellers.length];
+
+                  return (
+                    <Map
+                      key={item.id}
+                      item={item}
+                      index={index}
+                      seller={seller}
+                    />
+                  );
+                })}
           </div>
         </div>
       </section>

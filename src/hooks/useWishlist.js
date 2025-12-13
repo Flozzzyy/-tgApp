@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 
 export function useWishlist() {
-  // Загружаем избранное из localStorage при инициализации
+  // загружаем избранное из localStorage при инициализации
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem("wishlist");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Сохраняем в localStorage при каждом изменении
+  // сохраняем в localStorage при каждом изменении
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
   const addToWishlist = (item) => {
     setWishlist((prev) => {
-      // Проверяем, нет ли уже этого товара в избранном
+      // проверяем, нет ли уже этого товара в избранном
       if (prev.some((i) => i.id === item.id)) {
         return prev;
       }

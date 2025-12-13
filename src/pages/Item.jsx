@@ -34,9 +34,9 @@ const Item = () => {
   ];
 
   // Дополнительные изображения (можно добавить в данные товара)
-  const additionalImages = [item.image, item.image, item.image];
 
   const item = items.find((i) => i.id === Number(id));
+  const additionalImages = [item.image, item.image, item.image];
   if (!item) {
     return (
       <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center">
