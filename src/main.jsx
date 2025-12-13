@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ContextProvider } from "./context/ItemsContext.jsx";
+import Layout from "./pages/components/Layout.jsx";
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <StrictMode>
       <ContextProvider>
-        <App />
+        <Layout>
+          <App />
+        </Layout>
       </ContextProvider>
     </StrictMode>
     ,
