@@ -2,20 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { ItemsContext } from "../../context/ItemsContext";
 const Search = () => {
-  const {
-    items,
-    search,
-    setSearch,
-    categoriesRef,
-    filters,
-    formatDate,
-    sellers,
-    categories,
-    activeFilter,
-    setActiveFilter,
-    activeCategory,
-    setActiveCategory,
-  } = useContext(ItemsContext);
+  const { search, setSearch } = useContext(ItemsContext);
   return (
     <div className="px-4 py-2">
       <div className="relative">

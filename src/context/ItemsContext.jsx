@@ -64,7 +64,6 @@ export const ContextProvider = ({ children }) => {
   ];
   const [activeFilter, setActiveFilter] = useState("Все");
   const [activeCategory, setActiveCategory] = useState("Все");
-  const [wish, setWish] = useState([]);
 
   return (
     <ItemsContext.Provider
@@ -81,8 +80,6 @@ export const ContextProvider = ({ children }) => {
         setActiveFilter,
         activeCategory,
         setActiveCategory,
-        wish,
-        setWish,
       }}
     >
       {children}

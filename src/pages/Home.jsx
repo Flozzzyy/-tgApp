@@ -8,6 +8,7 @@ import BottomNav from "./components/BottomNav";
 import { useContext } from "react";
 import { ItemsContext } from "../context/ItemsContext";
 import WishButton from "./components/WishButton";
+import { useWishlist } from "../hooks/useWishlist";
 const Home = () => {
   const {
     items,
@@ -22,12 +23,9 @@ const Home = () => {
     setActiveFilter,
     activeCategory,
     setActiveCategory,
-    wish,
-    setWish,
-    setActiveWish,
-    activeWish,
   } = useContext(ItemsContext);
-
+  const { wishlist, addToWishlist, removeFromWishlist, isInWishlist } =
+    useWishlist();
   // Фильтрация товаров
   const visible = items
     .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
@@ -65,14 +63,14 @@ const Home = () => {
               const seller = sellers[index % sellers.length];
 
               return (
-                <Link to={`/items/${item.id}`} key={item.id}>
-                  <div className="bg-zinc-800 rounded-lg overflow-hidden flex flex-col">
+                <Link to={`/items/${item.id}`} key={item.id} className="h-full">
+                  <div className="bg-zinc-800 rounded-lg overflow-hidden flex flex-col h-full">
                     {/* Изображение с иконкой сердца */}
-                    <div className="relative shrink-0">
+                    <div className="relative shrink-0 h-48 w-full overflow-hidden">
                       <img
                         src={item.image}
                         alt={item.title}
-                        className="w-full h-48 object-cover"
+                        className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.src =
                             "https://via.placeholder.com/300x300?text=No+Image";
@@ -81,7 +79,7 @@ const Home = () => {
                       <WishButton item={item} />
                     </div>
 
-                    <div className="p-3 flex flex-col flex-1">
+                    <div className="p-3 flex flex-col flex-1 min-h-0">
                       <h3 className="text-sm font-medium text-white mb-2 line-clamp-2">
                         {item.title}
                       </h3>

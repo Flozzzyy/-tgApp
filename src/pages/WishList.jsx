@@ -3,12 +3,14 @@ import { useContext } from "react";
 import { ItemsContext } from "../context/ItemsContext";
 import BottomNav from "./components/BottomNav";
 import { Link } from "react-router-dom";
+import { useWishlist } from "../hooks/useWishlist";
 import Header from "./components/Header";
 const WishList = () => {
-  const { wish, setWish } = useContext(ItemsContext);
+  const { wishlist, addToWishlist, removeFromWishlist, isInWishlist } =
+    useWishlist();
   return (
     <div className="p-4">
-      {wish.length === 0 ? (
+      {wishlist.length === 0 ? (
         <div className="text-center text-zinc-400 text-lg py-8">
           Список желаемого пуст
         </div>
@@ -16,12 +18,9 @@ const WishList = () => {
         <>
           <Header />
           <div className="grid grid-cols-2 gap-4">
-            {wish.map((item) => (
-              <Link to={`/items/${item.id}`}>
-                <div
-                  key={item.id}
-                  className="bg-zinc-800 rounded-lg overflow-hidden flex flex-col"
-                >
+            {wishlist.map((item) => (
+              <Link to={`/items/${item.id}`} key={item.id}>
+                <div className="bg-zinc-800 rounded-lg overflow-hidden flex flex-col">
                   <div className="relative">
                     <img
                       src={item.image}
@@ -45,7 +44,7 @@ const WishList = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setWish((prev) => prev.filter((w) => w.id !== item.id));
+                        removeFromWishlist(item.id);
                       }}
                     >
                       Удалить из списка

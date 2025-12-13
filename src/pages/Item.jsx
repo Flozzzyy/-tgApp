@@ -3,23 +3,40 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ItemsContext } from "../context/ItemsContext";
 import WishButton from "./components/WishButton";
-
 const Item = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const {
-    items,
-    formatDate,
-    sellers,
-    reviews = [],
-    additionalImages = [],
-  } = useContext(ItemsContext);
+  const { items, formatDate, sellers } = useContext(ItemsContext);
+
+  // Локальные данные для демонстрации
+  const reviews = [
+    {
+      id: 1,
+      user: "Алексей М.",
+      avatar:
+        "https://ui-avatars.com/api/?name=Алексей+М&background=059669&color=fff&size=40",
+      rating: 5,
+      date: "2 дня назад",
+      text: "Отличный товар! Всё работает как надо, доставка быстрая.",
+    },
+    {
+      id: 2,
+      user: "Мария К.",
+      avatar:
+        "https://ui-avatars.com/api/?name=Мария+К&background=dc2626&color=fff&size=40",
+      rating: 4,
+      date: "5 дней назад",
+      text: "Хорошее качество, рекомендую!",
+    },
+  ];
+
+  // Дополнительные изображения (можно добавить в данные товара)
+  const additionalImages = [item.image, item.image, item.image];
 
   const item = items.find((i) => i.id === Number(id));
-
   if (!item) {
     return (
       <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center">

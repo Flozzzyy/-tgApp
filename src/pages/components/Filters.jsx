@@ -2,20 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { ItemsContext } from "../../context/ItemsContext";
 const Filters = () => {
-  const {
-    items,
-    search,
-    setSearch,
-    categoriesRef,
-    filters,
-    formatDate,
-    sellers,
-    categories,
-    activeFilter,
-    setActiveFilter,
-    activeCategory,
-    setActiveCategory,
-  } = useContext(ItemsContext);
+  const { filters, activeFilter, setActiveFilter } = useContext(ItemsContext);
   return (
     <div className="px-4 pt-4 pb-2">
       <div className="flex">

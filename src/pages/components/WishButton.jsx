@@ -1,30 +1,29 @@
 import React from "react";
 import { useContext } from "react";
 import { ItemsContext } from "../../context/ItemsContext";
-const WishButton = ({item}) => {
-  const { wish, setWish } = useContext(ItemsContext);
+import { useWishlist } from "../../hooks/useWishlist";
+const WishButton = ({ item }) => {
+  const { wishlist, addToWishlist, removeFromWishlist, isInWishlist } =
+    useWishlist();
+  const toggleWish = () => {
+    if (isInWishlist(item.id)) {
+      removeFromWishlist(item.id);
+    } else {
+      addToWishlist(item);
+    }
+  };
   return (
     <button
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // Проверяем, есть ли уже товар в вишлисте
-        const isInWish = wish.some((wishItem) => wishItem.id === item.id);
-
-        if (isInWish) {
-          // Удаляем из вишлиста
-          setWish((prev) => prev.filter((wishItem) => wishItem.id !== item.id));
-        } else {
-          // Добавляем в вишлист
-          setWish((prev) => [...prev, { ...item }]);
-        }
+        toggleWish();
       }}
       className="absolute top-2 right-2 w-8 h-8 bg-black/30 hover:bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm"
     >
       <svg
         className={`w-5 h-5 transition-colors duration-200 ${
-          wish.some((wishItem) => wishItem.id === item.id)
+          isInWishlist(item.id)
             ? "text-red-500 fill-red-500"
             : "text-white hover:text-red-300"
         }`}
