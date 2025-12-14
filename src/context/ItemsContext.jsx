@@ -33,15 +33,15 @@ export const ContextProvider = ({ children }) => {
   };
   const sellers = [
     {
-      name: "Эльшан А.",
+      name: "Алексей А.",
       avatar:
-        "https://ui-avatars.com/api/?name=Эльшан+А&background=4f46e5&color=fff&size=32",
+        "https://ui-avatars.com/api/?name=Алексей+А&background=4f46e5&color=fff&size=32",
       rating: 4.9,
     },
     {
-      name: "Алексей М.",
+      name: "Сергей М.",
       avatar:
-        "https://ui-avatars.com/api/?name=Алексей+М&background=059669&color=fff&size=32",
+        "https://ui-avatars.com/api/?name=Сергей+М&background=059669&color=fff&size=32",
       rating: 4.8,
     },
     {

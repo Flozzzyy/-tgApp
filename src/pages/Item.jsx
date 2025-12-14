@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ItemsContext } from "../context/ItemsContext";
@@ -36,7 +36,7 @@ const Item = () => {
   // Дополнительные изображения (можно добавить в данные товара)
 
   const item = items.find((i) => i.id === Number(id));
-  const additionalImages = [item.image, item.image, item.image];
+  const additionalImages = [item.image];
   if (!item) {
     return (
       <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center">
@@ -53,83 +53,23 @@ const Item = () => {
     );
   }
 
-  const seller = sellers[Math.floor(Math.random() * sellers.length)] || {
-    avatar: "https://via.placeholder.com/50",
-    name: "Продавец",
-    rating: 4.5,
-    reviews: 12,
-    items: 42,
-    joined: "2023",
-  };
+  // Фиксируем продавца на основе ID товара, чтобы он не менялся при изменении количества
+  const seller = useMemo(() => {
+    const sellerIndex = item.id % sellers.length;
+    const selectedSeller = sellers[sellerIndex] || sellers[0];
+    return {
+      ...selectedSeller,
+      reviews: selectedSeller.reviews || 12,
+      items: selectedSeller.items || 42,
+      joined: selectedSeller.joined || "2023",
+    };
+  }, [item.id, sellers]);
 
   return (
     <>
       {/* Верхняя панель статуса */}
       <div className="h-6 bg-zinc-900"></div>
 
-      {/* Хедер */}
-      <header className="bg-zinc-900 px-4 py-3 flex items-center justify-between border-b border-zinc-800 sticky top-0 z-50">
-        <button
-          onClick={() => navigate("/")}
-          className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-full flex items-center gap-2 text-sm"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span>Назад</span>
-        </button>
-
-        <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-cyan-400">Λ</span>
-          <div className="flex flex-col">
-            <span className="text-white font-semibold text-sm">Айден</span>
-            <span className="text-cyan-400 text-xs">Маркет</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button className="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 rounded-full flex items-center justify-center">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-          </button>
-          <button className="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 rounded-full flex items-center justify-center">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-              />
-            </svg>
-          </button>
-        </div>
-      </header>
 
       <div className="pb-24">
         {/* Галерея изображений */}
