@@ -7,6 +7,35 @@ export const ContextProvider = ({ children }) => {
   const [items, setItems] = useState(products);
   const [search, setSearch] = useState("");
   const categoriesRef = useRef(null);
+
+  // Глобальное состояние wishlist
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem("wishlist");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Сохраняем wishlist в localStorage при каждом изменении
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const addToWishlist = (item) => {
+    setWishlist((prev) => {
+      // проверяем, нет ли уже этого товара в избранном
+      if (prev.some((i) => i.id === item.id)) {
+        return prev;
+      }
+      return [...prev, item];
+    });
+  };
+
+  const removeFromWishlist = (id) => {
+    setWishlist((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const isInWishlist = (id) => {
+    return wishlist.some((i) => i.id === id);
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const months = [
@@ -80,6 +109,10 @@ export const ContextProvider = ({ children }) => {
         setActiveFilter,
         activeCategory,
         setActiveCategory,
+        wishlist,
+        addToWishlist,
+        removeFromWishlist,
+        isInWishlist,
       }}
     >
       {children}

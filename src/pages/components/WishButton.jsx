@@ -1,6 +1,4 @@
 import React from "react";
-import { useContext } from "react";
-import { ItemsContext } from "../../context/ItemsContext";
 import { useWishlist } from "../../hooks/useWishlist";
 const WishButton = ({ item }) => {
   const { wishlist, addToWishlist, removeFromWishlist, isInWishlist } =
